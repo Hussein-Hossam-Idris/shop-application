@@ -3,10 +3,19 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/orders.dart';
 import 'package:shop_app/widgets/cart_item_widget.dart';
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   static const routeName = '/cart';
+
+  @override
+  _CartScreenState createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  var _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
+    final scaffoldMas = ScaffoldMessenger.of(context);
     final cart = Provider.of<Cart>(context);
     final order = Provider.of<Orders>(context,listen: false);
     return Scaffold(
@@ -36,10 +45,20 @@ class CartScreen extends StatelessWidget {
                     ],
                   ),
                   ElevatedButton(
-                    child: Text('Place Order'),
-                    onPressed: (){
-                      order.addOrder(cart.items.values.toList(), cart.totalAmount);
-                      cart.clearCart();
+                    child:_isLoading? CircularProgressIndicator():  Text('Place Order'),
+                    onPressed:(cart.totalAmount<=0 || _isLoading)? null : () async{
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      try{
+                        await order.addOrder(cart.items.values.toList(), cart.totalAmount);
+                        cart.clearCart();
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      }catch(error){
+                        scaffoldMas.showSnackBar(SnackBar(content: Text('order was not added')));
+                      }
                     },
                     style: TextButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -71,3 +90,5 @@ class CartScreen extends StatelessWidget {
     );
   }
 }
+
+

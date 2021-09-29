@@ -8,6 +8,7 @@ import 'package:shop_app/screens/product_detail_screen.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     return LayoutBuilder(
       builder: (context, constraints) {
         final _product = Provider.of<Product>(context, listen: false);
@@ -43,8 +44,12 @@ class ProductItem extends StatelessWidget {
                       alignment: Alignment.topRight,
                       child: Consumer<Product>(
                         builder: (context, product, child) => IconButton(
-                            onPressed: () {
-                              _product.toggleFavoriteStatus();
+                            onPressed: () async{
+                              try{
+                               await _product.toggleFavoriteStatus();
+                              }catch(e){
+                                scaffoldMessenger.showSnackBar(SnackBar(content: Text(e.toString())));
+                              }
                             },
                             icon: Icon(product.isFavorite
                                 ? Icons.favorite
