@@ -6,8 +6,11 @@
  4-user can checkout cart and add it to their orders.<br>
  5-user can edit their cart by deleting or changing quantity of the items in cart.<br>
  
- <h3>to do</h3>
- add user auth<br><br>
+ <h3>to do:</h3>
+ 1-add user auth.<br>
+ 2-add animations and enchance Ui.<br><br>
+ 
+ <h3>screen shots:</h3>
  
 ![cart](https://user-images.githubusercontent.com/36144142/135366654-aa13bf3f-8392-4f22-8f69-e56c85fbe9ee.PNG)
 ![orders](https://user-images.githubusercontent.com/36144142/135366660-d81469eb-d65e-489f-b396-47575a2ffb1c.PNG)
