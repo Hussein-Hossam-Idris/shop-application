@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/providers/cart.dart';
 import '../providers/product.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
@@ -13,6 +14,7 @@ class ProductItem extends StatelessWidget {
       builder: (context, constraints) {
         final _product = Provider.of<Product>(context, listen: false);
         final _cart = Provider.of<Cart>(context, listen: false);
+        final _atuh = Provider.of<Auth>(context, listen: false);
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -23,7 +25,6 @@ class ProductItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               InkWell(
-                splashColor: Theme.of(context).primaryColor,
                 onTap: () => Navigator.of(context).pushNamed(
                     ProductDetailScreen.routeName,
                     arguments: _product.id),
@@ -33,22 +34,30 @@ class ProductItem extends StatelessWidget {
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           topRight: Radius.circular(10)),
-                      child: Image.network(
-                        _product.imageUrl,
-                        width: double.infinity,
-                        height: constraints.maxHeight * 0.7,
-                        fit: BoxFit.cover,
+                      child: Hero(
+                        tag: _product.id,
+                        child: FadeInImage(
+                            placeholder: AssetImage(
+                                'assets/images/product-placeholder.png'),
+                            image: NetworkImage(
+                              _product.imageUrl,
+                            ),
+                            width: double.infinity,
+                            height: constraints.maxHeight * 0.7,
+                            fit: BoxFit.cover),
                       ),
                     ),
                     Align(
                       alignment: Alignment.topRight,
                       child: Consumer<Product>(
                         builder: (context, product, child) => IconButton(
-                            onPressed: () async{
-                              try{
-                               await _product.toggleFavoriteStatus();
-                              }catch(e){
-                                scaffoldMessenger.showSnackBar(SnackBar(content: Text(e.toString())));
+                            onPressed: () async {
+                              try {
+                                await _product.toggleFavoriteStatus(
+                                    _atuh.token, _atuh.userId);
+                              } catch (e) {
+                                scaffoldMessenger.showSnackBar(
+                                    SnackBar(content: Text(e.toString())));
                               }
                             },
                             icon: Icon(product.isFavorite

@@ -20,7 +20,7 @@ class Product with ChangeNotifier {
       required this.imageUrl,
       this.isFavorite = false});
 
-  Future<void> toggleFavoriteStatus() async {
+  Future<void> toggleFavoriteStatus(String? token,String? userId) async {
     ///first optimistically change the is favorite and store its old value and change ui
     final oldStatus = isFavorite;
     isFavorite = !isFavorite;
@@ -29,11 +29,11 @@ class Product with ChangeNotifier {
     ///then we change the value on the server
 
     final url = Uri.parse(
-        "https://my-shop-application-e7db7-default-rtdb.firebaseio.com/products/$id.json");
-    final response = await http.patch(url,
-        body: json.encode({
-          'isFavorite': isFavorite,
-        }));
+        "https://my-shop-application-e7db7-default-rtdb.firebaseio.com/userFavorites/$userId/$id.json?auth=$token");
+    final response = await http.put(url,
+        body: json.encode(
+          isFavorite,
+        ));
     if (response.statusCode >= 400) {
       isFavorite = oldStatus;
       notifyListeners();
