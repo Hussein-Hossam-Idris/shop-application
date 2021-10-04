@@ -5,10 +5,8 @@
  3-user can add products to cart.<br>
  4-user can checkout cart and add it to their orders.<br>
  5-user can edit their cart by deleting or changing quantity of the items in cart.<br>
- 
- <h3>to do:</h3>
- 1-add user auth.<br>
- 2-add animations and enchance Ui.<br><br>
+ 6-user auth.<br>
+ <br><br>
  
  <h3>screen shots:</h3>
  
